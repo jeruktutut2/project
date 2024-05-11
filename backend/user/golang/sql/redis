@@ -1,0 +1,2 @@
+docker run --name project-redis -p 6380:6379 -d redis:latest
+redis-cli
