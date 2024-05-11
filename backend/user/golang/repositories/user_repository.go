@@ -36,10 +36,6 @@ func (repository *UserRepositoryImplementation) CountByUsername(db *sql.DB, ctx 
 func (repository *UserRepositoryImplementation) CountByEmail(db *sql.DB, ctx context.Context, email string) (numbeOfUser int, err error) {
 	err = db.QueryRowContext(ctx, `SELECT COUNT(*) AS number_of_user FROM user WHERE email = ?;`, email).Scan(&numbeOfUser)
 	return
-	// if err != nil {
-	// 	return
-	// }
-	// return
 }
 
 func (repository *UserRepositoryImplementation) FindByEmail(db *sql.DB, ctx context.Context, email string) (user modelentity.User, err error) {

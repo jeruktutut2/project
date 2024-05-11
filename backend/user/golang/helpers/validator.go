@@ -65,9 +65,7 @@ func GetValidatorError(validatorError error, structRequest interface{}) (result 
 validationErrorLoop:
 	for _, fieldError := range validationErrors {
 		structField, ok := val.Type().FieldByName(fieldError.Field())
-		// fmt.Println("structField:", structField, ok)
 		if !ok {
-			// result = nil
 			result["property"] = "couldn't find property: " + fieldError.Field()
 			return
 		}
@@ -88,8 +86,6 @@ validationErrorLoop:
 			result[structJsonTag] = "is " + fieldError.Tag()
 			continue validationErrorLoop
 		}
-
-		// result[structJsonTag] = fieldError.Tag()
 	}
 	return
 }

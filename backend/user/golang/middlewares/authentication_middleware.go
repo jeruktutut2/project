@@ -36,11 +36,5 @@ func Authenticate(redisUtil util.RedisUtil) func(next echo.HandlerFunc) echo.Han
 			c.SetRequest(c.Request().WithContext(ctx))
 			return next(c)
 		}
-		// requestId := c.Request().Context().Value(RequestIdKey).(string)
-		// cookie, err := c.Cookie("Authorization")
-		// if err != nil {
-		// 	helper.PrintLogToTerminal(err, requestId)
-		// 	return modelresponse.ToResponse()
-		// }
 	}
 }

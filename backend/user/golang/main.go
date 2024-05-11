@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	// fmt.Println(time.Now().String())
 	config := configuration.NewConfiguration()
 
 	mysqlUtil := util.NewMysqlConnection(config.MysqlUsername, config.MysqlPassword, config.MysqlHost, config.MysqlPort, config.MysqlDatabase, config.MysqlMaxOpenConnection, config.MysqlMaxIdleConnection, config.MysqlConnectionMaxLifetime, config.MysqlConnectionMaxIdletime)

@@ -76,7 +76,7 @@ func (controller *UserControllerImplementation) Logout(c echo.Context) error {
 	if err != nil {
 		return exception.ErrorHandler(c, requestId, err)
 	}
-	// fmt.Println(requestId)
+
 	cookie := new(http.Cookie)
 	cookie.Name = "Authorization"
 	cookie.Value = ""

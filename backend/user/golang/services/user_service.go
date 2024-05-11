@@ -167,7 +167,6 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 	sessionValue["username"] = user.Username.String
 	sessionValue["email"] = user.Email.String
 	sessionValue["idPermissions"] = idPermissions
-	// string(sessionByte)
 	sessionByte, err := json.Marshal(sessionValue)
 	if err != nil {
 		helper.PrintLogToTerminal(err, requestId)
@@ -175,7 +174,6 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 		return
 	}
 	session := string(sessionByte)
-	// fmt.Println("session:", session)
 	_, err = service.RedisUtil.GetClient().Set(ctx, sessionId, session, 0).Result()
 	if err != nil && err != redis.Nil {
 		helper.PrintLogToTerminal(err, requestId)
