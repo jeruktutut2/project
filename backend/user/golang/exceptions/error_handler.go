@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	helper "project-user/helpers"
 	modelresponse "project-user/models/responses"
 
 	"github.com/labstack/echo/v4"
@@ -20,7 +21,7 @@ func ErrorHandler(c echo.Context, requestId string, err interface{}) error {
 		errorMessage = exception.Error()
 	} else if exception, ok := err.(ValidationException); ok {
 		httpStatusCode = exception.Code
-		var exceptionError map[string]interface{}
+		var exceptionError []helper.Result
 		json.Unmarshal([]byte(exception.Error()), &exceptionError)
 		errorMessage = exceptionError
 	} else if exception, ok := err.(TimeoutCancelException); ok {

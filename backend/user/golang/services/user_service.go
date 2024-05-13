@@ -22,7 +22,7 @@ import (
 
 type UserService interface {
 	Register(ctx context.Context, requestId string, registerUserRequest modelrequest.RegisterUserRequest) (registerUserResponse modelresponse.RegisterUserResponse, err error)
-	Login(ctx context.Context, requestId string, loginUserRequest modelrequest.LoginUserRequest) (sessionId string, err error)
+	Login(ctx context.Context, requestId string, sessionIdUser string, loginUserRequest modelrequest.LoginUserRequest) (sessionId string, err error)
 	Logout(ctx context.Context, requestId string, sessionId string) (err error)
 }
 
@@ -59,6 +59,22 @@ func (service *UserServiceImplementation) Register(ctx context.Context, requestI
 			err = exception.NewValidationException(string(validationResultByte))
 			return
 		}
+	}
+	if registerUserRequest.Password != registerUserRequest.ConfirmPassword {
+		var results []helper.Result
+		var result helper.Result
+		result.Field = "password and confirmPassword"
+		result.Message = "password and confirm password is different"
+		results = append(results, result)
+		var resultsByte []byte
+		resultsByte, err = json.Marshal(results)
+		if err != nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		err = exception.NewValidationException(string(resultsByte))
+		return
 	}
 
 	numberOfUser, err := service.UserRepository.CountByUsername(service.MysqlUtil.GetDb(), ctx, registerUserRequest.Username)
@@ -115,7 +131,22 @@ func (service *UserServiceImplementation) Register(ctx context.Context, requestI
 	return
 }
 
-func (service *UserServiceImplementation) Login(ctx context.Context, requestId string, loginUserRequest modelrequest.LoginUserRequest) (sessionId string, err error) {
+func (service *UserServiceImplementation) Login(ctx context.Context, requestId string, sessionIdUser string, loginUserRequest modelrequest.LoginUserRequest) (sessionId string, err error) {
+	if sessionIdUser != "" {
+		var rowsAffected int64
+		rowsAffected, err = service.RedisUtil.GetClient().Del(ctx, sessionIdUser).Result()
+		if err != nil && err != redis.Nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		if rowsAffected != 1 {
+			err = errors.New("rows affected not 1")
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+	}
 	err = service.Validate.Struct(loginUserRequest)
 	if err != nil {
 		validationResult := helper.GetValidatorError(err, loginUserRequest)

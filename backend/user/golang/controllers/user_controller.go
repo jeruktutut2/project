@@ -47,6 +47,10 @@ func (controller *UserControllerImplementation) Register(c echo.Context) error {
 
 func (controller *UserControllerImplementation) Login(c echo.Context) error {
 	requestId := c.Request().Context().Value(middleware.RequestIdKey).(string)
+	sessionId, ok := c.Request().Context().Value(middleware.SessionIdKey).(string)
+	if !ok {
+		sessionId = ""
+	}
 	loginUserRequest := modelrequest.LoginUserRequest{}
 	if err := c.Bind(&loginUserRequest); err != nil {
 		helper.PrintLogToTerminal(err, requestId)
@@ -54,7 +58,7 @@ func (controller *UserControllerImplementation) Login(c echo.Context) error {
 		return exception.ErrorHandler(c, requestId, err)
 	}
 
-	sessionId, err := controller.UserService.Login(c.Request().Context(), requestId, loginUserRequest)
+	sessionId, err := controller.UserService.Login(c.Request().Context(), requestId, sessionId, loginUserRequest)
 	if err != nil {
 		return exception.ErrorHandler(c, requestId, err)
 	}
