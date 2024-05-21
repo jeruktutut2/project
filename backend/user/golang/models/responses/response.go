@@ -27,7 +27,7 @@ func ToResponse(c echo.Context, httpStatusCode int, requestId string, responseDa
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 	responseBody := string(respByte)
-	log := `{"responseTime": "` + time.Now().String() + `", "requestId": "` + requestId + `", "response": ` + responseBody + `}`
+	log := `{"responseTime": "` + time.Now().String() + `", "app": "project-user", "requestId": "` + requestId + `", "response": ` + responseBody + `}`
 	fmt.Println(log)
 	return c.JSON(httpStatusCode, r)
 }

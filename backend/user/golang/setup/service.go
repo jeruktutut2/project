@@ -11,8 +11,8 @@ type ServiceSetup struct {
 	UserService service.UserService
 }
 
-func NewServiceSetup(mysqlUtil util.MysqlUtil, redisUtil util.RedisUtil, validate *validator.Validate, repositorySetup RepositorySetup) ServiceSetup {
-	return ServiceSetup{
+func NewServiceSetup(mysqlUtil util.MysqlUtil, redisUtil util.RedisUtil, validate *validator.Validate, repositorySetup *RepositorySetup) *ServiceSetup {
+	return &ServiceSetup{
 		UserService: service.NewUserService(mysqlUtil, redisUtil, validate, repositorySetup.UserRepository, repositorySetup.UserPermissionRepository),
 	}
 }

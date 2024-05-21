@@ -7,8 +7,8 @@ type RepositorySetup struct {
 	UserPermissionRepository repository.UserPermissionRepository
 }
 
-func NewRepositorySetup() RepositorySetup {
-	return RepositorySetup{
+func NewRepositorySetup() *RepositorySetup {
+	return &RepositorySetup{
 		UserRepository:           repository.NewUserRepository(),
 		UserPermissionRepository: repository.NewUserPermissinoRepository(),
 	}

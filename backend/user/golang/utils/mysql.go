@@ -22,11 +22,12 @@ type MysqlUtilImplementation struct {
 	db *sql.DB
 }
 
-func NewMysqlConnection(username string, password string, host string, port string, database string, maxOpenconnection uint16, maxIdleConnection uint16, connectionMaxLifetime uint16, connectionMaxIdletime uint16) MysqlUtil {
+func NewMysqlConnection(username string, password string, host string, database string, maxOpenconnection uint16, maxIdleConnection uint16, connectionMaxLifetime uint16, connectionMaxIdletime uint16) MysqlUtil {
 	println(time.Now().String(), "mysql: connecting to", host)
 
 	// why use concat instead fmt.Sprintf, because there is warning leaking param with username, password, host, database
-	dsn := username + `:` + password + `@tcp(` + host + `:` + port + `)/` + database + `?charset=utf8mb4&parseTime=True&loc=Local`
+	// dsn := username + `:` + password + `@tcp(` + host + `:` + port + `)/` + database + `?charset=utf8mb4&parseTime=True&loc=Local`
+	dsn := username + `:` + password + `@tcp(` + host + `)/` + database + `?charset=utf8mb4&parseTime=True&loc=Local`
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)

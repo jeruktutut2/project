@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package protofiles;
+option go_package = "pb/";
+
+message Requestresponse {
+    string body = 1;
+}

@@ -61,7 +61,7 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 		remoteAddr := c.Request().RemoteAddr
 		forwardedFor := c.Request().Header.Get("X-Forwarded-For")
 
-		requestLog := `{"requestTime": "` + datetimeNowRequest.String() + `", "method": "` + requestMethod + `","requestId":"` + requestId + `","host": "` + host + `","urlPath":"` + urlPath + `","protocol":"` + protocol + `","body": ` + requestBody + `, "userAgent": "` + userAgent + `", "remoteAddr": "` + remoteAddr + `", "forwardedFor": "` + forwardedFor + `"}`
+		requestLog := `{"requestTime": "` + datetimeNowRequest.String() + `", "app": "project-user", "method": "` + requestMethod + `","requestId":"` + requestId + `","host": "` + host + `","urlPath":"` + urlPath + `","protocol":"` + protocol + `","body": ` + requestBody + `, "userAgent": "` + userAgent + `", "remoteAddr": "` + remoteAddr + `", "forwardedFor": "` + forwardedFor + `"}`
 		fmt.Println(requestLog)
 		return next(c)
 	}

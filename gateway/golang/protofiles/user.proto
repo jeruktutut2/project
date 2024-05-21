@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package protofiles;
+option go_package = "pb/api/v1/user";
+
+message RegisterRequest {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+    string confirmpassword = 4;
+    string utc = 5;
+}
+
+message RegisterResponse {
+    string username = 1;
+    string email = 2;
+    string utc = 3;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string sessionid = 1;
+}
+
+message LogoutRequest {
+    string sessionid = 1;
+}
+
+message LogoutResponse {
+    string msg = 1;
+}
+
+message Empty {}
+
+service UserService {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Logout(Empty) returns (LogoutResponse);
+}

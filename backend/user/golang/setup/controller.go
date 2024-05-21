@@ -6,8 +6,8 @@ type ControllerSetup struct {
 	UserController controller.UserController
 }
 
-func NewControllerSetup(serviceSetup ServiceSetup) ControllerSetup {
-	return ControllerSetup{
+func NewControllerSetup(serviceSetup *ServiceSetup) *ControllerSetup {
+	return &ControllerSetup{
 		UserController: controller.NewUserController(serviceSetup.UserService),
 	}
 }

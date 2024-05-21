@@ -14,6 +14,6 @@ COPY --from=build /go/src/app .
 
 COPY .env /app
 
-EXPOSE 10001
+EXPOSE 10002
 
 ENTRYPOINT [ "./main" ]

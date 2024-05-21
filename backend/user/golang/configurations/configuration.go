@@ -13,13 +13,11 @@ type Configuration struct {
 	MysqlUsername              string `mapstructure:"MYSQL_USERNAME"`
 	MysqlPassword              string `mapstructure:"MYSQL_PASSWORD"`
 	MysqlDatabase              string `mapstructure:"MYSQL_DATABASE"`
-	MysqlPort                  string `mapstructure:"MYSQL_PORT"`
 	MysqlMaxOpenConnection     uint16 `mapstructure:"MYSQL_MAX_OPEN_CONNECTION"`
 	MysqlMaxIdleConnection     uint16 `mapstructure:"MYSQL_MAX_IDLE_CONNECTION"`
 	MysqlConnectionMaxLifetime uint16 `mapstructure:"MYSQL_CONNECTION_MAX_LIFETIME"`
 	MysqlConnectionMaxIdletime uint16 `mapstructure:"MYSQL_CONNECTION_MAX_IDLETIME"`
 	RedisHost                  string `mapstructure:"REDIS_HOST"`
-	RedisPort                  int    `mapstructure:"REDIS_PORT"`
 	RedisDatabase              int    `mapstructure:"REDIS_DATABASE"`
 	JwtKey                     string `mapstructure:"JWT_KEY"`
 	JwtAccessTokenExpireTime   uint16 `mapstructure:"JWT_ACCESS_TOKEN_EXPIRE_TIME"`
