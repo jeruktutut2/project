@@ -30,7 +30,34 @@ func NewUserController(userServiceclient pbuser.UserServiceClient) UserControlle
 }
 
 func (controller *UserControllerImplementation) Register(c echo.Context) error {
-	return nil
+	requestId := c.Request().Context().Value(middleware.RequestIdKey).(string)
+	registerUserRequest := modelrequest.RegisterUserRequest{}
+	if err := c.Bind(&registerUserRequest); err != nil {
+		helper.PrintLogToTerminal(err, requestId)
+		err = exception.NewBadRequestException(err.Error())
+		return exception.ErrorHandler(c, requestId, err)
+	}
+	registerRequest := &pbuser.RegisterRequest{
+		Username:        registerUserRequest.Username,
+		Email:           registerUserRequest.Email,
+		Password:        registerUserRequest.Password,
+		Confirmpassword: registerUserRequest.ConfirmPassword,
+		Utc:             registerUserRequest.Utc,
+	}
+
+	md := metadata.Pairs(
+		"requestid", requestId,
+	)
+	ctx := metadata.NewOutgoingContext(c.Request().Context(), md)
+	registerResponse, err := controller.UserServiceClient.Register(ctx, registerRequest)
+	if err != nil {
+		helper.PrintLogToTerminal(err, requestId)
+		return exception.GrpcErrorHandler(c, requestId, err)
+	}
+
+	response := modelresponse.ToRegisterUserResponse(registerResponse)
+
+	return modelresponse.ToResponse(c, http.StatusCreated, requestId, response, "")
 }
 
 func (controller *UserControllerImplementation) Login(c echo.Context) error {
