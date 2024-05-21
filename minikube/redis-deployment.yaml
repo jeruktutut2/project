@@ -17,24 +17,12 @@ spec:
         image: redis:latest
         ports:
         - containerPort: 6379
-      #   volumeMounts:
-      #   - name: config
-      #     mountPath: /usr/local/etc/redis/redis.conf
-      #     subPath: redis.conf
-      #   args:
-      #   - redis-server
-      #   - /usr/local/etc/redis/redis.conf
-      # volumes:
-      # - name: config
-      #   configMap:
-      #     name: redis-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: project-redis
 spec:
-  # type: NodePort
   ports:
     - port: 6379
       targetPort: 6379

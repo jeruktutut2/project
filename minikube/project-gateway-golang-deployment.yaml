@@ -12,7 +12,6 @@ metadata:
   name: project-gateway-golang-secret
 data:
   grpcUserHost: cHJvamVjdC1iYWNrZW5kLXVzZXItZ29sYW5nOjEwMDAy
-  # grpcUserHost: cHJvamVjdC1iYWNrZW5kLXVzZXItZ29sYW5nLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWw6MTAwMDI=
   redisHost: cHJvamVjdC1yZWRpczo2Mzc5
   redisDatabase: MA==
 ---

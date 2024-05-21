@@ -1,22 +1,3 @@
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: project-ingress
-#   annotations: 
-#     nginx.ingress.kubernetes.io/rewrite-target: /$1
-# spec:
-#   rules:
-#     - host: project.example
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: project-gateway-golang
-#                 port:
-#                   number: 10001
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -35,16 +16,3 @@ spec:
                 name: project-gateway-golang
                 port:
                   number: 10001
-
-# apiVersion: networking.k8s.io/v1  # Use networking.k8s.io/v1 for v1.19+
-# kind: Ingress
-# metadata:
-#   name: project-ingress
-# spec:
-#   rules:
-#   - http:
-#     paths:
-#     - path: /*  # Matches all paths
-#       backend:
-#         serviceName: project-gateway-golang
-#         servicePort: 10001
