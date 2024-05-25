@@ -154,6 +154,7 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 				return
 			}
 			err = exception.NewValidationException(string(validationResultByte))
+			helper.PrintLogToTerminal(err, requestId)
 			return
 		}
 	}

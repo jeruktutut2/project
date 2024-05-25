@@ -5,6 +5,7 @@ import (
 	"net"
 	grpcuser "project-user/grpc"
 	pbuser "project-user/grpc/pb/api/v1/user"
+	"project-user/interceptor"
 	"time"
 
 	"google.golang.org/grpc"
@@ -17,6 +18,7 @@ func NewGrpcSetup(serviceSetup *ServiceSetup, port string) (grpcServer *grpc.Ser
 	}
 	opts := []grpc.ServerOption{
 		grpc.MaxRecvMsgSize(1024 * 1024), // Set max receive message size (1MB in this example)
+		grpc.UnaryInterceptor(interceptor.SetLog),
 	}
 	grpcServer = grpc.NewServer(opts...)
 	userGrpcService := grpcuser.NewUserGrpcService(serviceSetup.UserService)
