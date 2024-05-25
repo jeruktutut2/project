@@ -9,10 +9,17 @@ spec:
     - host: localhost
       http:
         paths:
-          - path: /
+          - path: /api
             pathType: Prefix
             backend:
               service:
                 name: project-gateway-golang
                 port:
                   number: 10001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: project-frontent-nextjs
+                port:
+                  number: 10000

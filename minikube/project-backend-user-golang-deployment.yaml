@@ -45,6 +45,13 @@ spec:
           image: project-user:1.0.0
           ports:
             - containerPort: 10002
+          resources:
+            requests: 
+              cpu: 100m
+              memory: 100Mi
+            limits: 
+              cpu: 200m
+              memory: 200Mi
           env:
             - name: APPLICATION_PORT
               valueFrom:

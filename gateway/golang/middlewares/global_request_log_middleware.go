@@ -1,11 +1,13 @@
 package middleware
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	helper "gateway/helpers"
 	modelresponse "gateway/models/responses"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -17,21 +19,20 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 		requestMethod := c.Request().Method
 		requestId := c.Request().Context().Value(RequestIdKey).(string)
 
-		var requestBody string
-		requestBody = `""`
-		if c.Request().GetBody != nil {
-			jsonRequestBodyMap := make(map[string]interface{})
-			err := json.NewDecoder(c.Request().Body).Decode(&jsonRequestBodyMap)
+		var rBody string
+		rBody = `""`
+		if c.Request().Body != nil {
+			requestBody, err := io.ReadAll(c.Request().Body)
+			defer c.Request().Body.Close()
 			if err != nil {
 				helper.PrintLogToTerminal(err, requestId)
 				return modelresponse.ToResponse(c, http.StatusInternalServerError, requestId, "", "internal server error")
 			}
-			jsonRequestBodyByte, err := json.Marshal(jsonRequestBodyMap)
-			if err != nil {
-				helper.PrintLogToTerminal(err, requestId)
-				return modelresponse.ToResponse(c, http.StatusInternalServerError, requestId, "", "cannot convert request body to json")
-			}
-			requestBody = string(jsonRequestBodyByte)
+			body := io.NopCloser(bytes.NewBuffer(requestBody))
+			c.Request().Body = body
+
+			rBody = strings.ReplaceAll(string(requestBody), "\n", "")
+			rBody = strings.ReplaceAll(rBody, "\t", "")
 		}
 
 		// var tokenAuthorization string
@@ -61,7 +62,7 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 		remoteAddr := c.Request().RemoteAddr
 		forwardedFor := c.Request().Header.Get("X-Forwarded-For")
 
-		requestLog := `{"requestTime": "` + datetimeNowRequest.String() + `", "app": "project-gateway", "method": "` + requestMethod + `","requestId":"` + requestId + `","host": "` + host + `","urlPath":"` + urlPath + `","protocol":"` + protocol + `","body": ` + requestBody + `, "userAgent": "` + userAgent + `", "remoteAddr": "` + remoteAddr + `", "forwardedFor": "` + forwardedFor + `"}`
+		requestLog := `{"requestTime": "` + datetimeNowRequest.String() + `", "app": "project-gateway", "method": "` + requestMethod + `","requestId":"` + requestId + `","host": "` + host + `","urlPath":"` + urlPath + `","protocol":"` + protocol + `","body": ` + rBody + `, "userAgent": "` + userAgent + `", "remoteAddr": "` + remoteAddr + `", "forwardedFor": "` + forwardedFor + `"}`
 		fmt.Println(requestLog)
 		return next(c)
 	}

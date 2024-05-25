@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-frontent-nextjs
+spec:
+  selector:
+    matchLabels:
+      app: project-frontent-nextjs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: project-frontent-nextjs
+    spec:
+      containers:
+        - name: project-frontend
+          image: project-frontend:1.0.0
+          ports:
+            - containerPort: 10000
+          resources:
+            requests: 
+              cpu: 100m
+              memory: 100Mi
+            limits: 
+              cpu: 200m
+              memory: 200Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-frontent-nextjs
+spec:
+  selector:
+    app: project-frontent-nextjs
+  ports:
+    - protocol: "TCP"
+      port: 10000
+      targetPort: 10000
+  type: ClusterIP

@@ -135,16 +135,11 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 	if sessionIdUser != "" {
 		var rowsAffected int64
 		rowsAffected, err = service.RedisUtil.GetClient().Del(ctx, sessionIdUser).Result()
-		if err != nil && err != redis.Nil {
+		if err != nil {
 			helper.PrintLogToTerminal(err, requestId)
-			err = exception.CheckError(err)
-			return
-		}
-		if rowsAffected != 1 {
+		} else if err == nil && rowsAffected != 1 {
 			err = errors.New("rows affected not 1")
 			helper.PrintLogToTerminal(err, requestId)
-			err = exception.CheckError(err)
-			return
 		}
 	}
 	err = service.Validate.Struct(loginUserRequest)
@@ -169,7 +164,14 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 		err = exception.CheckError(err)
 		return
 	} else if err != nil && err == sql.ErrNoRows {
-		err = exception.NewBadRequestException("wrong email or password")
+		var response string
+		response, err = helper.ToResultsMessageResponse(requestId, "message", "wrong email or password")
+		if err != nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		err = exception.NewBadRequestException(response)
 		helper.PrintLogToTerminal(err, requestId)
 		return
 	}
@@ -177,7 +179,14 @@ func (service *UserServiceImplementation) Login(ctx context.Context, requestId s
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password.String), []byte(loginUserRequest.Password))
 	if err != nil {
 		helper.PrintLogToTerminal(err, requestId)
-		err = exception.NewBadRequestException("wrong email or password")
+		var response string
+		response, err = helper.ToResultsMessageResponse(requestId, "message", "wrong email or password")
+		if err != nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		err = exception.NewBadRequestException(response)
 		return
 	}
 

@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"encoding/json"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -91,5 +92,20 @@ func GetValidatorError(validatorError error, structRequest interface{}) (results
 		}
 		results = append(results, r)
 	}
+	return
+}
+
+func ToResultsMessageResponse(requestId string, field string, message string) (response string, err error) {
+	var results []Result
+	var result Result
+	result.Field = field
+	result.Message = message
+	results = append(results, result)
+	var resultsByte []byte
+	resultsByte, err = json.Marshal(results)
+	if err != nil {
+		return
+	}
+	response = string(resultsByte)
 	return
 }
