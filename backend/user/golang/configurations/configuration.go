@@ -7,25 +7,26 @@ import (
 )
 
 type Configuration struct {
-	ApplicationPort            string `mapstructure:"APPLICATION_PORT"`
-	ApplicationTimeout         uint8  `mapstructure:"APPLICATION_TIMEOUT"`
-	MysqlHost                  string `mapstructure:"MYSQL_HOST"`
-	MysqlUsername              string `mapstructure:"MYSQL_USERNAME"`
-	MysqlPassword              string `mapstructure:"MYSQL_PASSWORD"`
-	MysqlDatabase              string `mapstructure:"MYSQL_DATABASE"`
-	MysqlMaxOpenConnection     uint16 `mapstructure:"MYSQL_MAX_OPEN_CONNECTION"`
-	MysqlMaxIdleConnection     uint16 `mapstructure:"MYSQL_MAX_IDLE_CONNECTION"`
-	MysqlConnectionMaxLifetime uint16 `mapstructure:"MYSQL_CONNECTION_MAX_LIFETIME"`
-	MysqlConnectionMaxIdletime uint16 `mapstructure:"MYSQL_CONNECTION_MAX_IDLETIME"`
-	RedisHost                  string `mapstructure:"REDIS_HOST"`
-	RedisDatabase              int    `mapstructure:"REDIS_DATABASE"`
-	JwtKey                     string `mapstructure:"JWT_KEY"`
-	JwtAccessTokenExpireTime   uint16 `mapstructure:"JWT_ACCESS_TOKEN_EXPIRE_TIME"`
-	JwtRefreshTokenExpireTime  uint16 `mapstructure:"JWT_REFRESH_TOKEN_EXPIRE_TIME"`
-	RabbitmqHost               string `mapstructure:"RABBITMQ_HOST"`
-	RabbitmqUsername           string `mapstructure:"RABBITMQ_USERNAME"`
-	RabbitmqPassword           string `mapstructure:"RABBITMQ_PASSWORD"`
-	RabbitmqPort               string `mapstructure:"RABBITMQ_PORT"`
+	ProjectUserApplicationPort            string `mapstructure:"PROJECT_USER_APPLICATION_PORT"`
+	ProjectUserApplicationTimeout         uint8  `mapstructure:"PROJECT_USER_APPLICATION_TIMEOUT"`
+	ProjectUserMysqlHost                  string `mapstructure:"PROJECT_USER_MYSQL_HOST"`
+	ProjectUserMysqlUsername              string `mapstructure:"PROJECT_USER_MYSQL_USERNAME"`
+	ProjectUserMysqlPassword              string `mapstructure:"PROJECT_USER_MYSQL_PASSWORD"`
+	ProjectUserMysqlDatabase              string `mapstructure:"PROJECT_USER_MYSQL_DATABASE"`
+	ProjectUserMysqlMaxOpenConnection     uint16 `mapstructure:"PROJECT_USER_MYSQL_MAX_OPEN_CONNECTION"`
+	ProjectUserMysqlMaxIdleConnection     uint16 `mapstructure:"PROJECT_USER_MYSQL_MAX_IDLE_CONNECTION"`
+	ProjectUserMysqlConnectionMaxLifetime uint16 `mapstructure:"PROJECT_USER_MYSQL_CONNECTION_MAX_LIFETIME"`
+	ProjectUserMysqlConnectionMaxIdletime uint16 `mapstructure:"PROJECT_USER_MYSQL_CONNECTION_MAX_IDLETIME"`
+	ProjectUserRedisHost                  string `mapstructure:"PROJECT_USER_REDIS_HOST"`
+	ProjectUserRedisPort                  string `mapstructure:"PROJECT_USER_REDIS_PORT"`
+	ProjectUserRedisDatabase              int    `mapstructure:"PROJECT_USER_REDIS_DATABASE"`
+	JwtKey                                string `mapstructure:"JWT_KEY"`
+	JwtAccessTokenExpireTime              uint16 `mapstructure:"JWT_ACCESS_TOKEN_EXPIRE_TIME"`
+	JwtRefreshTokenExpireTime             uint16 `mapstructure:"JWT_REFRESH_TOKEN_EXPIRE_TIME"`
+	RabbitmqHost                          string `mapstructure:"RABBITMQ_HOST"`
+	RabbitmqUsername                      string `mapstructure:"RABBITMQ_USERNAME"`
+	RabbitmqPassword                      string `mapstructure:"RABBITMQ_PASSWORD"`
+	RabbitmqPort                          string `mapstructure:"RABBITMQ_PORT"`
 }
 
 func NewConfiguration() (configuration *Configuration) {

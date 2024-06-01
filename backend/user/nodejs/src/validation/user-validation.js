@@ -60,8 +60,8 @@ const customPasswordValidation = (value, helpers) => {
 }
 
 const checkConfirmPassword = (value, helpers) => {
-    console.log("password:", value.password, value.confirmPassword, value.password !== value.confirmPassword);
-    if (value.password !== value.confirmPassword) {
+    // console.log("password:", value.password, value.confirmPassword, value.password !== value.confirmPassword);
+    if (value.password !== value.confirmpassword) {
         return helpers.error('confirm.password.wrong');
     }
     return value
@@ -74,7 +74,7 @@ export const registerUserValidation = Joi.object({
     // Error: Invalid template variable "" fails due to: Formula contains invalid trailing operator
     // when put {} in the error message
     password: Joi.string().min(8).max(20).required().custom(customPasswordValidation).message({'password.wrong': "please use only uppercase, lowercase, number and must have 1 uppercase. lowercase, number, @, _, -, min 8 and max 20"}),
-    confirmPassword: Joi.string().min(8).max(20).required().custom(customPasswordValidation).message({'password.wrong': "please use only uppercase, lowercase, number and must have 1 uppercase. lowercase, number, @, _, -, min 8 and max 20"}),
+    confirmpassword: Joi.string().min(8).max(20).required().custom(customPasswordValidation).message({'password.wrong': "please use only uppercase, lowercase, number and must have 1 uppercase. lowercase, number, @, _, -, min 8 and max 20"}),
     utc: Joi.string().min(4).max(6).required()
     // .custom(checkConfirmPassword).message({"confirm.password.wrong": "password and confirm password is different"})
 });

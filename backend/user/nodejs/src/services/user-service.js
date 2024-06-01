@@ -8,8 +8,8 @@ import redisApp from "../application/redis.js";
 import { v4 as uuid } from "uuid";
 
 const register = async (request) => {
-    if (request.password !== request.confirmPassword) {
-        throw new ValidationException(400, JSON.stringify([{field: "password and confirmPassword", message: "password and confirm password is different"}]))
+    if (request.password !== request.confirmpassword) {;
+        throw new ValidationException(400, JSON.stringify([{field: "message", message: "password and confirm password is different"}]))
     }
 
     validate(registerUserValidation, request)
@@ -28,7 +28,7 @@ const register = async (request) => {
     })
 
     if (numberOfUser > 0) {
-        throw new ResponseException(400, "username or email already exists")
+        throw new ResponseException(400, JSON.stringify([{field: "message", message: "username or email already exists"}]))
     }
 
     const user = {}
@@ -41,14 +41,14 @@ const register = async (request) => {
         data: user,
         select: {
             username : true,
-            email: true
+            email: true,
+            utc: true
         }
     })
 }
 
 const login = async (request, sessionId) => {
     const userSession = await redisApp.redis.get(sessionId)
-    console.log("userSession:", userSession);
     if (userSession) {
         const sessiondel = await redisApp.redis.del(sessionId)
     }
@@ -69,12 +69,12 @@ const login = async (request, sessionId) => {
         }
     })
     if (!user) {
-        throw new ResponseException(400, "wrong email or password")
+        throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
     }
 
     const inPasswordValid = await bcrypt.compare(request.password, user.password)
     if (!inPasswordValid) {
-        throw new ResponseException(400, "wrong email or password")
+        throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
     }
 
     sessionId = uuid().toString()

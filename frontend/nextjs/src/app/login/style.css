@@ -22,6 +22,14 @@
     margin-bottom: 15px;
 }
 
+.login-box-login-error-message {
+    width: 100%;
+    margin-bottom: 5px;
+    text-align: center;
+    color: red;
+    font-size: 12px;
+}
+
 .login-box .email-box {
     display: flex;
     flex-direction: column;
@@ -92,18 +100,57 @@
     width: 100%;
     height: 35px;
     border: none;
-    border-radius: 10px;
-    background-color: #1c87f1;
+    border-radius: 3px;
+    background-color: #05AFF2;
     margin-bottom: 10px;
     color: white;
 }
 
 .login-box .login:hover {
-    background-color: #1c86f1cb;
+    background-color:  #0477BF;
 }
 
-/* .login-box .login:focus {
-    background-color: #1c86f1cb;
-    border: 0px solid #ffffff;
-    box-shadow: 0 0 5px #00C3FF;
-} */
+.login-box .login:disabled {
+    background-color: #0477BF;
+}
+
+.login-box .login:active {
+    background-color: #0E5299;
+}
+
+.message-green {
+    color: green;
+}
+
+.login-box-signup {
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+}
+
+.line {
+    margin: 15px 0;
+    position: relative;
+    height: 1px;
+    width: 100%;
+    background-color: #b5b2b2;
+    font-size: 12px;
+}
+
+.line:before {
+    content: "Or";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    color: #232836;
+    padding: 0 10px;
+}
+
+.login-box-google {
+    width: 100%;
+    height: 35px;
+    border-radius: 3px;
+    border: 1px solid #b5b2b2;
+}

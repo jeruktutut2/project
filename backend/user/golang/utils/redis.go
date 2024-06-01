@@ -17,10 +17,10 @@ type RedisUtilImplementation struct {
 	Client *redis.Client
 }
 
-func NewRedisConnection(host string, db int) RedisUtil {
-	println(time.Now().String()+" redis: connecting to", host)
+func NewRedisConnection(host string, port string, db int) RedisUtil {
+	println(time.Now().String()+" redis: connecting to", host+":"+port)
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     host,
+		Addr:     host + ":" + port,
 		Password: "", // no password set
 		DB:       db, // use default DB
 	})
@@ -29,7 +29,7 @@ func NewRedisConnection(host string, db int) RedisUtil {
 	if err != nil {
 		log.Fatalln("redis connection error:", err)
 	}
-	println(time.Now().String()+" redis: connected to", host)
+	println(time.Now().String()+" redis: connected to", host+":"+port)
 	return &RedisUtilImplementation{
 		Client: rdb,
 	}

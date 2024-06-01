@@ -3,8 +3,8 @@ kind : ConfigMap
 metadata:
   name : project-backend-user-golang-config-map
 data:
-  applicationPort : "10002"
-  applicationTimeout: "5"
+  projectUserApplicationPort : "10002"
+  projectUserApplicationTimeout: "5"
 
 ---
 
@@ -13,16 +13,17 @@ kind: Secret
 metadata:
   name: project-backend-user-golang-secret
 data:
-  mysqlHost: cHJvamVjdC1teXNxbA==
-  mysqlUsername: cm9vdA==
-  mysqlPassword: MTIzNDU=
-  mysqlDatabase: dXNlcg==
-  mysqlMaxOpenConnection: MTA=
-  mysqlMaxIdleConnection: MTA=
-  mysqlConnectionMaxLifetime: MTA=
-  mysqlConnectionMaxIdletime: MTA=
-  redisHost: cHJvamVjdC1yZWRpczo2Mzc5
-  redisDatabase: MA==
+  projectUserMysqlHost: cHJvamVjdC1teXNxbA==
+  projectUserMysqlUsername: cm9vdA==
+  projectUserMysqlPassword: MTIzNDU=
+  projectUserMysqlDatabase: dXNlcg==
+  projectUserMysqlMaxOpenConnection: MTA=
+  projectUserMysqlMaxIdleConnection: MTA=
+  projectUserMysqlConnectionMaxLifetime: MTA=
+  projectUserMysqlConnectionMaxIdletime: MTA=
+  projectUserRedisHost: cHJvamVjdC1yZWRpcw==
+  projectUserRedisPort: NjM3OQ==
+  projectUserRedisDatabase: MA==
 
 ---
 
@@ -53,66 +54,71 @@ spec:
               cpu: 200m
               memory: 200Mi
           env:
-            - name: APPLICATION_PORT
+            - name: PROJECT_USER_APPLICATION_PORT
               valueFrom:
                 configMapKeyRef:
                   name: project-backend-user-golang-config-map
-                  key: applicationPort
-            - name: APPLICATION_TIMEOUT
+                  key: projectUserApplicationPort
+            - name: PROJECT_USER_APPLICATION_TIMEOUT
               valueFrom:
                 configMapKeyRef:
                   name: project-backend-user-golang-config-map
-                  key: applicationTimeout
-            - name: MYSQL_HOST
+                  key: projectUserApplicationTimeout
+            - name: PROJECT_USER_MYSQL_HOST
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlHost
-            - name: MYSQL_USERNAME
+                  key: projectUserMysqlHost
+            - name: PROJECT_USER_MYSQL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlUsername
-            - name: MYSQL_PASSWORD
+                  key: projectUserMysqlUsername
+            - name: PROJECT_USER_MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlPassword
-            - name: MYSQL_DATABASE
+                  key: projectUserMysqlPassword
+            - name: PROJECT_USER_MYSQL_DATABASE
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlDatabase
-            - name: MYSQL_MAX_OPEN_CONNECTION
+                  key: projectUserMysqlDatabase
+            - name: PROJECT_USER_MYSQL_MAX_OPEN_CONNECTION
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlMaxOpenConnection
-            - name: MYSQL_MAX_IDLE_CONNECTION
+                  key: projectUserMysqlMaxOpenConnection
+            - name: PROJECT_USER_MYSQL_MAX_IDLE_CONNECTION
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlMaxIdleConnection
-            - name: MYSQL_CONNECTION_MAX_LIFETIME
+                  key: projectUserMysqlMaxIdleConnection
+            - name: PROJECT_USER_MYSQL_CONNECTION_MAX_LIFETIME
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlConnectionMaxLifetime
-            - name: MYSQL_CONNECTION_MAX_IDLETIME
+                  key: projectUserMysqlConnectionMaxLifetime
+            - name: PROJECT_USER_MYSQL_CONNECTION_MAX_IDLETIME
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: mysqlConnectionMaxIdletime
-            - name: REDIS_HOST
+                  key: projectUserMysqlConnectionMaxIdletime
+            - name: PROJECT_USER_REDIS_HOST
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: redisHost
-            - name: REDIS_DATABASE
+                  key: projectUserRedisHost
+            - name: PROJECT_USER_REDIS_PORT
               valueFrom:
                 secretKeyRef:
                   name: project-backend-user-golang-secret
-                  key: redisDatabase
+                  key: projectUserRedisPort
+            - name: PROJECT_USER_REDIS_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: project-backend-user-golang-secret
+                  key: projectUserRedisDatabase
 
 ---
 

@@ -84,7 +84,14 @@ func (service *UserServiceImplementation) Register(ctx context.Context, requestI
 		return
 	}
 	if numberOfUser > 0 {
-		err = exception.NewBadRequestException("username already exists")
+		var response string
+		response, err = helper.ToResultsMessageResponse(requestId, "message", "username already exists")
+		if err != nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		err = exception.NewBadRequestException(response)
 		helper.PrintLogToTerminal(err, requestId)
 		return
 	}
@@ -96,7 +103,14 @@ func (service *UserServiceImplementation) Register(ctx context.Context, requestI
 		return
 	}
 	if numberOfUser > 0 {
-		err = exception.NewBadRequestException("email already exists")
+		var response string
+		response, err = helper.ToResultsMessageResponse(requestId, "message", "email already exists")
+		if err != nil {
+			helper.PrintLogToTerminal(err, requestId)
+			err = exception.CheckError(err)
+			return
+		}
+		err = exception.NewBadRequestException(response)
 		helper.PrintLogToTerminal(err, requestId)
 		return
 	}

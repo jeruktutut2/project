@@ -105,3 +105,8 @@ body {
     color-scheme: dark;
   }
 } */
+
+.message-red {
+  font-size: 10px;
+  color: red;
+}
