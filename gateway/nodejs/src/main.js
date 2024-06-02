@@ -1,8 +1,11 @@
 import exprss from "./setups/express.js";
 import userRoute from "./routes/user-route.js";
 import dotenv from 'dotenv';
+import grpcSetup from "./setups/grpc.js";
 
 dotenv.config();
+
+grpcSetup.client = await grpcSetup.setClient()
 
 let app = await exprss.setExpress(userRoute.userRouter())
 app = await exprss.startExpress(app)
