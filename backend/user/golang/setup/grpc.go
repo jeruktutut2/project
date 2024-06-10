@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-func NewGrpcSetup(serviceSetup *ServiceSetup, port string) (grpcServer *grpc.Server) {
-	listener, err := net.Listen("tcp", ":"+port)
+func NewUserGrpcSetup(serviceSetup *ServiceSetup, host string) (grpcServer *grpc.Server) {
+	listener, err := net.Listen("tcp", host)
 	if err != nil {
 		log.Fatalln(time.Now().String(), "error when listen: ", err)
 	}
@@ -30,11 +30,11 @@ func NewGrpcSetup(serviceSetup *ServiceSetup, port string) (grpcServer *grpc.Ser
 			log.Fatalln(time.Now().String(), "error when server grpc:", err)
 		}
 	}()
-	println(time.Now().String(), "grpc: started on port", port)
+	println(time.Now().String(), "grpc user: started on host", host)
 	return
 }
 
-func StopGrpc(grpcServer *grpc.Server) {
+func StopUserGrpc(grpcServer *grpc.Server) {
 	grpcServer.GracefulStop()
-	println(time.Now().String(), "grpc: stopped")
+	println(time.Now().String(), "grpc user: stopped")
 }

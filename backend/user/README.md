@@ -22,7 +22,7 @@ DATABASE_URL="project-mysql-network://username:password@host:3306/databasename"
 REDIS_HOST=project-redis-network  
 
 ## build image  
-docker build -t project-user:1.0.0 .  
+docker build -t project-backend-user:1.0.0 .  
 
 ## run project  
 docker run --name project-user-container --network project -p 10001:10001 project-user:1.0.0

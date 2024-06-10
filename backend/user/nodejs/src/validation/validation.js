@@ -1,4 +1,4 @@
-import { ValidationException } from "../exception/validation-exception.js";
+import { ResponseException } from "../exception/response-exception.js";
 
 export const validate = (schema, request) => {
     const result = schema.validate(request, {
@@ -14,7 +14,7 @@ export const validate = (schema, request) => {
             const message = {field: field, message: fieldMessage}
             errorMessage.push(message)
         }
-        throw new ValidationException(400, JSON.stringify(errorMessage))
+        throw new ResponseException(400, JSON.stringify(errorMessage))
     } else {
         return result.value
     }

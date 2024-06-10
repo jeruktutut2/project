@@ -9,20 +9,19 @@ import (
 	controller "gateway/controllers"
 	route "gateway/routes"
 	"gateway/setup"
-	util "gateway/utils"
 )
 
 func main() {
 	config := configuration.NewConfiguration()
 
-	redisUtil := util.NewRedisConnection(config.RedisHost, config.RedisDatabase)
-	defer redisUtil.Close()
+	// redisUtil := util.NewRedisConnection(config.RedisHost, config.RedisDatabase)
+	// defer redisUtil.Close()
 
-	e := setup.Echo(config.ApplicationTimeout)
-	setup.StartEcho(e, config.ApplicationPort)
+	e := setup.Echo(config.ProjectGatewayApplicationTimeout)
+	setup.StartEcho(e, config.ProjectGatewayApplicationPort)
 	defer setup.StopEcho(e)
 
-	userClientConnection, userServiceClient := setup.NewUserClientConnection(config.GrpcUserHost)
+	userClientConnection, userServiceClient := setup.NewUserClientConnection(config.ProjectGatewayUserApplicationHost)
 	defer setup.CloseUserClientConnection(userClientConnection)
 	userController := controller.NewUserController(userServiceClient)
 	landingPageController := controller.NewLandingPageController()

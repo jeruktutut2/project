@@ -1,90 +1,96 @@
 import { validate } from "../validation/validation.js";
 import { registerUserValidation, loginUserValidation } from "../validation/user-validation.js";
-import prismaClient from "../application/mysql.js";
 import { ResponseException } from "../exception/response-exception.js";
-import { ValidationException } from "../exception/validation-exception.js";
 import bcrypt from "bcrypt";
-import redisApp from "../application/redis.js";
 import { v4 as uuid } from "uuid";
+import mysqlUtil from "../utils/mysql-util.js";
+import userRepository from "../repositories/user-repository.js";
+import redisUtil from "../utils/redis-util.js";
+import errorException from "../exception/error-exception.js";
 
-const register = async (request) => {
-    if (request.password !== request.confirmpassword) {;
-        throw new ValidationException(400, JSON.stringify([{field: "message", message: "password and confirm password is different"}]))
-    }
-
-    validate(registerUserValidation, request)
-
-    const numberOfUser = await prismaClient.user.count({
-        where: {
-            OR: [
-                {
-                    username: request.username
-                },
-                {
-                    email: request.email
-                }
-            ]
+const register = async (request, requestId, sessionId) => {
+    let connection
+    try {
+        if (sessionId !== "" || sessionId !== undefined) {
+            await redisUtil.redis.del(sessionId)
         }
-    })
 
-    if (numberOfUser > 0) {
-        throw new ResponseException(400, JSON.stringify([{field: "message", message: "username or email already exists"}]))
-    }
+        validate(registerUserValidation, request)
 
-    const user = {}
-    user.username = request.username
-    user.email = request.email
-    user.password = await bcrypt.hash(request.password, 10)
-    user.utc = request.utc
-    user.created_at = new Date().getTime()
-    return await prismaClient.user.create({
-        data: user,
-        select: {
-            username : true,
-            email: true,
-            utc: true
+        connection = await mysqlUtil.mysqlPool.getConnection();
+
+        const [rows] = await userRepository.countByEmail(connection, request.username, request.email)
+        const numberOfUser = rows[0].number_of_user
+        if (numberOfUser > 0) {
+            throw new ResponseException(400, JSON.stringify([{field: "message", message: "username or email already exists"}]))
         }
-    })
+
+        const user = {
+            username: request.username,
+            email: request.email,
+            password: await bcrypt.hash(request.password, 10),
+            utc: request.utc,
+            createdAt: new Date().getTime()
+        }
+        await userRepository.create(connection, user)
+
+        mysqlUtil.mysqlPool.releaseConnection(connection);
+
+        return {username: user.username, email: user.email, utc: user.utc}
+    } catch (error) {
+        errorException.errorHandler(error, requestId)
+    } finally {
+        if (connection) {
+            connection.release()
+        }
+    }
 }
 
-const login = async (request, sessionId) => {
-    const userSession = await redisApp.redis.get(sessionId)
-    if (userSession) {
-        const sessiondel = await redisApp.redis.del(sessionId)
-    }
-
-    validate(loginUserValidation, request)
-
-    const user = await prismaClient.user.findFirst({
-        where: {
-            email: request.email
-        },
-        select: {
-            id: true,
-            username: true,
-            email: true,
-            password: true,
-            utc: true,
-            userPermissions: true
+const login = async (request, requestId, sessionId) => {
+    let connection
+    try {
+        if (sessionId !== "" || sessionId !== undefined) {
+            await redisUtil.redis.del(sessionId)
         }
-    })
-    if (!user) {
-        throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
-    }
+        
+        validate(loginUserValidation, request)
 
-    const inPasswordValid = await bcrypt.compare(request.password, user.password)
-    if (!inPasswordValid) {
-        throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
-    }
+        connection = await mysqlUtil.mysqlPool.getConnection();
 
-    sessionId = uuid().toString()
-    await redisApp.redis.set(sessionId, JSON.stringify({id: user.id, username: user.username, email: user.email, userPermissions: user.userPermissions}))
-    return sessionId
+        const [rows] = await userRepository.findByEmail(connection, request.email)
+        const user = rows[0]
+        if (!user) {
+            throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
+        }
+
+        const inPasswordValid = await bcrypt.compare(request.password, user.password)
+        if (!inPasswordValid) {
+            throw new ResponseException(400, JSON.stringify([{field: "message", message: "wrong email or password"}]))
+        }
+
+        sessionId = uuid().toString()
+        await redisUtil.redis.set(sessionId, JSON.stringify({id: user.id, username: user.username, email: user.email, userPermissions: user.userPermissions}))
+
+        mysqlUtil.mysqlPool.releaseConnection(connection);
+        return sessionId
+    } catch (error) {
+        errorException.errorHandler(error, requestId)
+    } finally {
+        if (connection) {
+            connection.release()
+        }   
+    }
 }
 
-const logout = async (sessionId) => {
-    await redisApp.redis.del(sessionId)
-    return true
+const logout = async (requestId, sessionId) => {
+    try {
+        if (sessionId !== "" || sessionId !== undefined) {
+            await redisUtil.redis.del(sessionId)
+        }
+        return true
+    } catch (error) {
+        errorException.errorHandler(error, requestId)
+    }
 }
 
 export default {

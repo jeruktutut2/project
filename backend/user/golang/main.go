@@ -22,8 +22,8 @@ func main() {
 
 	repositorySetup := setup.NewRepositorySetup()
 	serviceSetup := setup.NewServiceSetup(mysqlUtil, redisUtil, validate, repositorySetup)
-	grpcSetup := setup.NewGrpcSetup(serviceSetup, config.ProjectUserApplicationPort)
-	defer setup.StopGrpc(grpcSetup)
+	grpcSetup := setup.NewUserGrpcSetup(serviceSetup, config.ProjectUserApplicationHost)
+	defer setup.StopUserGrpc(grpcSetup)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()

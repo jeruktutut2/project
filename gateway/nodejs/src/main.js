@@ -1,9 +1,6 @@
 import exprss from "./setups/express.js";
 import userRoute from "./routes/user-route.js";
-import dotenv from 'dotenv';
 import grpcSetup from "./setups/grpc.js";
-
-dotenv.config();
 
 grpcSetup.client = await grpcSetup.setClient()
 

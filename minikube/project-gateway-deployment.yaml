@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-gateway
+spec:
+  selector:
+    matchLabels:
+      app: project-gateway
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: project-gateway
+    spec:
+      containers:
+        - name: project-gateway
+          image: project-gateway:1.0.0
+          ports:
+            - containerPort: 10001
+          resources:
+            requests: 
+              cpu: 100m
+              memory: 100Mi
+            limits: 
+              cpu: 200m
+              memory: 200Mi
+          env:
+            - name: PROJECT_GATEWAY_APPLICATION_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config-map
+                  key: projectGatewayApplicationPort
+            - name: PROJECT_GATEWAY_APPLICATION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config-map
+                  key: projectGatewayApplicationTimeout
+            - name: PROJECT_GATEWAY_USER_APPLICATION_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config-map
+                  key: projectGatewayUserApplicationHost
+            - name: PROJECT_USER_APPLICATION_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config-map
+                  key: projectUserApplicationHost
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-gateway
+spec:
+  selector:
+    app: project-gateway
+  ports:
+    - protocol: "TCP"
+      port: 10001
+      targetPort: 10001
+  type: ClusterIP

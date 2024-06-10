@@ -1,16 +1,17 @@
-import dotenv from 'dotenv';
-import redisSetup from "./setup/redis-setup.js";
 import grpcSetup from "./setup/grpc-setup.js";
+import mysqlUtil from "./utils/mysql-util.js";
+import redisUtil from "./utils/redis-util.js";
 
-dotenv.config();
-await redisSetup.newConnection()
+mysqlUtil.mysqlPool = mysqlUtil.newConnection()
+redisUtil.redis = await redisUtil.newConnection()
 grpcSetup.listen()
 
 const signal = ["SIGBREAK", "SIGINT", "SIGUSR1", "SIGUSR2", "SIGTERM"]
 signal.forEach((eventType) => {
     process.on(eventType, async () => {
         console.log(new Date(), eventType, "stop process");
-        await redisSetup.closeConnection()
+        mysqlUtil.closeConnection(mysqlUtil.mysqlPool)
+        await redisUtil.closeConnection()
         process.exit(0)
     });
 });

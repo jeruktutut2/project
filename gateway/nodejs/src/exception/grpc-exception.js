@@ -1,4 +1,5 @@
-const grpcErrorHandler = (err, res) => {
+import logMiddleware from "../middlewares/log-middleware.js";
+const grpcErrorHandler = (err, req, res) => {
     let httpCode = 0
     if (err.code === 3) {
         httpCode = 400
@@ -9,7 +10,7 @@ const grpcErrorHandler = (err, res) => {
     } else {
         httpCode = 500
     }
-    return res.status(httpCode).json({data: "", error: JSON.parse(err.details)})
+    return logMiddleware.logResponse(res, httpCode, req.requestId, {data: "", error: JSON.parse(err.details)})
 }
 
 export default {

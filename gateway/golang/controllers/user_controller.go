@@ -94,6 +94,18 @@ func (controller *UserControllerImplementation) Login(c echo.Context) error {
 
 func (controller *UserControllerImplementation) Logout(c echo.Context) error {
 	requestId := c.Request().Context().Value(middleware.RequestIdKey).(string)
+	sessionId := c.Request().Context().Value(middleware.SessionIdKey).(string)
+	md := metadata.Pairs(
+		"requestid", requestId,
+	)
+	ctx := metadata.NewOutgoingContext(c.Request().Context(), md)
+	logoutRequest := &pbuser.LogoutRequest{Sessionid: sessionId}
+	logoutResponse, err := controller.UserServiceClient.Logout(ctx, logoutRequest)
+	if err != nil {
+		helper.PrintLogToTerminal(err, requestId)
+		return exception.GrpcErrorHandler(c, requestId, err)
+	}
+
 	cookie := new(http.Cookie)
 	cookie.Name = "Authorization"
 	cookie.Value = ""
@@ -102,5 +114,5 @@ func (controller *UserControllerImplementation) Logout(c echo.Context) error {
 	cookie.MaxAge = -1
 	c.SetCookie(cookie)
 
-	return modelresponse.ToResponse(c, http.StatusOK, requestId, "successfully logout", "")
+	return modelresponse.ToResponse(c, http.StatusOK, requestId, logoutResponse.Msg, "")
 }

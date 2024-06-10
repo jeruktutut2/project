@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func SetGlobalTimeout(timeout uint8) func(next echo.HandlerFunc) echo.HandlerFunc {
+func SetGlobalTimeout(timeout int) func(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if c.Request().URL.Path != "/api/v1/sse/handle-sse-without-channel" {

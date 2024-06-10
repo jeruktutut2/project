@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*LogoutResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 }
 
 type userServiceClient struct {
@@ -53,7 +53,7 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 	return out, nil
 }
 
-func (c *userServiceClient) Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *userServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
 	out := new(LogoutResponse)
 	err := c.cc.Invoke(ctx, "/protofiles.UserService/Logout", in, out, opts...)
 	if err != nil {
@@ -68,7 +68,7 @@ func (c *userServiceClient) Logout(ctx context.Context, in *Empty, opts ...grpc.
 type UserServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	Logout(context.Context, *Empty) (*LogoutResponse, error)
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -82,7 +82,7 @@ func (UnimplementedUserServiceServer) Register(context.Context, *RegisterRequest
 func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedUserServiceServer) Logout(context.Context, *Empty) (*LogoutResponse, error) {
+func (UnimplementedUserServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -135,7 +135,7 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/protofiles.UserService/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Logout(ctx, req.(*Empty))
+		return srv.(UserServiceServer).Logout(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

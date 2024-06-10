@@ -22,7 +22,7 @@ type MysqlUtilImplementation struct {
 	db *sql.DB
 }
 
-func NewMysqlConnection(username string, password string, host string, database string, maxOpenconnection uint16, maxIdleConnection uint16, connectionMaxLifetime uint16, connectionMaxIdletime uint16) MysqlUtil {
+func NewMysqlConnection(username string, password string, host string, database string, maxOpenconnection int, maxIdleConnection int, connectionMaxLifetime int, connectionMaxIdletime int) MysqlUtil {
 	println(time.Now().String(), "mysql: connecting to", host)
 
 	// why use concat instead fmt.Sprintf, because there is warning leaking param with username, password, host, database
@@ -38,8 +38,8 @@ func NewMysqlConnection(username string, password string, host string, database 
 		panic(err)
 	}
 
-	db.SetMaxOpenConns(int(maxOpenconnection))
-	db.SetMaxIdleConns(int(maxIdleConnection))
+	db.SetMaxOpenConns(maxOpenconnection)
+	db.SetMaxIdleConns(maxIdleConnection)
 	db.SetConnMaxLifetime(time.Minute * time.Duration(connectionMaxLifetime))
 	db.SetConnMaxIdleTime(time.Second * time.Duration(connectionMaxIdletime))
 

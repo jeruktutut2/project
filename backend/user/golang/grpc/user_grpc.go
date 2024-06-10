@@ -91,7 +91,7 @@ func (userGrpcService *UserGrpcServiceImplementation) Login(ctx context.Context,
 	return
 }
 
-func (userGrpcService *UserGrpcServiceImplementation) Logout(ctx context.Context, empty *pbuser.Empty) (response *pbuser.LogoutResponse, err error) {
+func (userGrpcService *UserGrpcServiceImplementation) Logout(ctx context.Context, request *pbuser.LogoutRequest) (response *pbuser.LogoutResponse, err error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		err = errors.New("cannot find metadata")
@@ -106,18 +106,13 @@ func (userGrpcService *UserGrpcServiceImplementation) Logout(ctx context.Context
 		err = exception.GrpcErrorHandler(err)
 		return
 	}
-	sessionIdA, ok := md["sessionid"]
-	if !ok {
-		err = errors.New("cannot find sessionid")
-		helper.PrintLogToTerminal(err, requestIdA[0])
-		err = exception.GrpcErrorHandler(err)
-		return
-	}
-	err = userGrpcService.UserService.Logout(ctx, requestIdA[0], sessionIdA[0])
+
+	err = userGrpcService.UserService.Logout(ctx, requestIdA[0], request.GetSessionid())
 	if err != nil {
 		err = exception.GrpcErrorHandler(err)
 		return
 	}
-	response.Msg = "successfully logout"
+	logoutResponse := pbuser.LogoutResponse{Msg: "successfully logout"}
+	response = &logoutResponse
 	return
 }

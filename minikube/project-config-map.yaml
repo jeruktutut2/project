@@ -1,0 +1,11 @@
+apiVersion : v1
+kind : ConfigMap
+metadata:
+  name : project-config-map
+data:
+  projectGatewayApplicationPort: "10001"
+  projectGatewayApplicationTimeout: "5"
+  projectGatewayUserApplicationHost: project-backend-user:10002
+  projectUserApplicationHost: 0.0.0.0:10002
+  projectUserApplicationPort : "10002"
+  projectUserApplicationTimeout: "5"

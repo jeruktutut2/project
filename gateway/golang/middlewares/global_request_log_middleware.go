@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	helper "gateway/helpers"
 	modelresponse "gateway/models/responses"
@@ -18,6 +19,7 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 		datetimeNowRequest := time.Now()
 		requestMethod := c.Request().Method
 		requestId := c.Request().Context().Value(RequestIdKey).(string)
+		urlPath := c.Request().URL.Path
 
 		var rBody string
 		rBody = `""`
@@ -31,8 +33,26 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 			body := io.NopCloser(bytes.NewBuffer(requestBody))
 			c.Request().Body = body
 
-			rBody = strings.ReplaceAll(string(requestBody), "\n", "")
-			rBody = strings.ReplaceAll(rBody, "\t", "")
+			if urlPath == "/api/v1/user/register" {
+				var requestBodyMap map[string]interface{}
+				err = json.Unmarshal(requestBody, &requestBodyMap)
+				if err != nil {
+					helper.PrintLogToTerminal(err, requestId)
+					return modelresponse.ToResponse(c, http.StatusInternalServerError, requestId, "", "internal server error")
+				}
+				rBody = `{"username": "` + requestBodyMap["username"].(string) + `", "email": "` + requestBodyMap["email"].(string) + `", "utc": "` + requestBodyMap["utc"].(string) + `"}`
+			} else if urlPath == "/api/v1/user/login" {
+				var requestBodyMap map[string]interface{}
+				err = json.Unmarshal(requestBody, &requestBodyMap)
+				if err != nil {
+					helper.PrintLogToTerminal(err, requestId)
+					return modelresponse.ToResponse(c, http.StatusInternalServerError, requestId, "", "internal server error")
+				}
+				rBody = `{"email": "` + requestBodyMap["email"].(string) + `"}`
+			} else {
+				rBody = strings.ReplaceAll(string(requestBody), "\n", "")
+				rBody = strings.ReplaceAll(rBody, "\t", "")
+			}
 		}
 
 		// var tokenAuthorization string
@@ -57,7 +77,7 @@ func SetGlobalRequestLog(next echo.HandlerFunc) echo.HandlerFunc {
 		} else {
 			protocol = "https"
 		}
-		urlPath := c.Request().URL.Path
+		// urlPath := c.Request().URL.Path
 		userAgent := c.Request().Header.Get("User-Agent")
 		remoteAddr := c.Request().RemoteAddr
 		forwardedFor := c.Request().Header.Get("X-Forwarded-For")

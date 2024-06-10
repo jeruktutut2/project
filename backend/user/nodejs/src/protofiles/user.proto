@@ -37,5 +37,5 @@ message Empty {}
 service UserService {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Login(LoginRequest) returns (LoginResponse);
-    rpc Logout(Empty) returns (LogoutResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
 }

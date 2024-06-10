@@ -19,13 +19,13 @@ const listen = () => {
     const server = new grpc.Server({interceptors: [logInterceptor.setLog]})
     server.addService(userProto.UserService.service, { Register, Login, Logout })
     server.bindAsync(
-        "0.0.0.0:"+process.env.PROJECT_USER_APPLICATION_PORT,
+        process.env.PROJECT_USER_APPLICATION_HOST,
         grpc.ServerCredentials.createInsecure(),
         (error, port) => {
             if (error) {
                 console.log("error:", error);
             }
-            console.log((new Date()).toISOString(), "grpc: started on port", process.env.PROJECT_USER_APPLICATION_PORT);
+            console.log((new Date()).toISOString(), "grpc: started on host", process.env.PROJECT_USER_APPLICATION_HOST);
         }
     )
 }

@@ -13,7 +13,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: project-gateway-golang
+                name: project-gateway
                 port:
                   number: 10001
           - path: /

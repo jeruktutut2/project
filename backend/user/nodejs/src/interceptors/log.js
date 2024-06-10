@@ -13,6 +13,10 @@ const setLog = (methodDescriptor, call) => {
     .withOnReceiveMessage((message, next) => {
         if (methodDescriptor.path === "/protofiles.UserService/Login") {
             body = {email: message.email}
+        } else if (methodDescriptor.path === "/protofiles.UserService/Register") {
+            body = { username: message.username, email: message.email, utc: message.utc }
+        } else {
+            body = message
         }
         const requestLog = {grpcRequestTime: new Date() , app: "project-user", requestId: requestid, urlPath: methodDescriptor.path, body: body, metadata: md}
         console.log(JSON.stringify(requestLog));

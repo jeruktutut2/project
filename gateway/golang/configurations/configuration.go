@@ -1,32 +1,32 @@
 package configuration
 
 import (
+	"log"
+	"os"
+	"strconv"
 	"time"
-
-	"github.com/spf13/viper"
 )
 
 type Configuration struct {
-	ApplicationPort    string `mapstructure:"APPLICATION_PORT"`
-	ApplicationTimeout uint8  `mapstructure:"APPLICATION_TIMEOUT"`
-	RedisHost          string `mapstructure:"REDIS_HOST"`
-	RedisDatabase      int    `mapstructure:"REDIS_DATABASE"`
-	GrpcUserHost       string `mapstructure:"GRPC_USER_HOST"`
+	ProjectGatewayApplicationPort     string `mapstructure:"PROJECT_GATEWAY_APPLICATION_PORT"`
+	ProjectGatewayApplicationTimeout  int    `mapstructure:"PROJECT_GATEWAY_APPLICATION_TIMEOUT"`
+	ProjectGatewayUserApplicationHost string `mapstructure:"PROJECT_GATEWAY_USER_APPLICATION_HOST"`
+	ProjectUserApplicationHost        string `mapstructure:"PROJECT_USER_APPLICATION_HOST"`
+	ProjectUserApplicationPort        string `mapstructure:"PROJECT_USER_APPLICATION_PORT"`
 }
 
 func NewConfiguration() (configuration *Configuration) {
-	println(time.Now().String() + " reading config file")
-	viper.SetConfigName(".env")
-	viper.SetConfigType("env")
-	viper.AddConfigPath("./")
-	err := viper.ReadInConfig()
+	println(time.Now().String() + " reading environment variables")
+	var conf Configuration
+	var err error
+	conf.ProjectGatewayApplicationPort = os.Getenv("PROJECT_GATEWAY_APPLICATION_PORT")
+	conf.ProjectGatewayApplicationTimeout, err = strconv.Atoi(os.Getenv("PROJECT_GATEWAY_APPLICATION_TIMEOUT"))
 	if err != nil {
-		panic("read config error: " + err.Error())
+		log.Fatalln("error when convert project gateway application port from string to int:", err)
 	}
-	err = viper.Unmarshal(&configuration)
-	if err != nil {
-		panic("unmarshal config error: " + err.Error())
-	}
-	println(time.Now().String() + " config file is read")
+	conf.ProjectGatewayUserApplicationHost = os.Getenv("PROJECT_GATEWAY_USER_APPLICATION_HOST")
+	conf.ProjectUserApplicationHost = os.Getenv("PROJECT_USER_APPLICATION_HOST")
+	println(time.Now().String() + " environment variables is read")
+	configuration = &conf
 	return configuration
 }

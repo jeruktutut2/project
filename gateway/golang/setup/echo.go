@@ -11,13 +11,13 @@ import (
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 )
 
-func Echo(timeout uint8) (e *echo.Echo) {
+func Echo(timeout int) (e *echo.Echo) {
 	e = echo.New()
-	e.Use(echomiddleware.Recover())
-	e.HTTPErrorHandler = exception.CustomHTTPErrorHandler
 	e.Use(middleware.SetGlobalRequestId)
 	e.Use(middleware.SetGlobalTimeout(timeout))
 	e.Use(middleware.SetGlobalRequestLog)
+	e.Use(echomiddleware.Recover())
+	e.HTTPErrorHandler = exception.CustomHTTPErrorHandler
 	return
 }
 
