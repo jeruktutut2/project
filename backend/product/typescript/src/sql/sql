@@ -1,0 +1,5 @@
+create database:
+CREATE DATABASE project_products;
+SHOW DATABASES;
+USE project_products;
+SHOW TABLES;

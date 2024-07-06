@@ -1,0 +1,61 @@
+create index products:
+PUT http://localhost:9200/products_v1
+
+show indices:
+GET http://localhost:9200/_cat/indices?v
+
+delete index:
+DELETE http://localhost:9200/products_v1
+
+create aliases products:
+POST http://localhost:9200/_aliases
+Content-Type: application/json
+{
+    "actions": [
+        {
+            "add": {
+                "alias": "products",
+                "index": "products_v1"
+            }
+        }
+    ]
+}
+
+show aliases:
+GET http://localhost:9200/_aliases
+
+create mapping products:
+POST http://localhost:9200/products_v1/mapping
+Content-Type: application/json
+{
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text"
+        }
+    }
+}
+
+{
+    "numeric_detection": true,
+    "date_detection": true,
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text"
+        }
+    }
+}
+
+show mapping products:
+GET http://localhost:9200/products_v1/_mapping

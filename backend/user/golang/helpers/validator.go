@@ -1,7 +1,6 @@
-package helper
+package helpers
 
 import (
-	"encoding/json"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -61,53 +60,38 @@ func TelephoneValidator(validate *validator.Validate) {
 	})
 }
 
-type Result struct {
+type ErrorMessage struct {
 	Field   string `json:"field"`
 	Message string `json:"message"`
 }
 
-func GetValidatorError(validatorError error, structRequest interface{}) (results []Result) {
+func GetValidatorError(validatorError error, structRequest interface{}) (errorMessages []ErrorMessage) {
 	validationErrors := validatorError.(validator.ValidationErrors)
 	val := reflect.ValueOf(structRequest)
 	for _, fieldError := range validationErrors {
-		var r Result
+		var errorMessage ErrorMessage
 		structField, ok := val.Type().FieldByName(fieldError.Field())
 		if !ok {
-			r.Field = "property"
-			r.Message = "couldn't find property: " + fieldError.Field()
-			results = append(results, r)
+			errorMessage.Field = "property"
+			errorMessage.Message = "couldn't find property: " + fieldError.Field()
+			errorMessages = append(errorMessages, errorMessage)
 			return
 		}
-		r.Field = structField.Tag.Get("json")
+		errorMessage.Field = structField.Tag.Get("json")
 		if fieldError.Tag() == "usernamevalidator" {
-			r.Message = "please use only uppercase and lowercase letter and number and min 5 and max 8 alphanumeric"
+			errorMessage.Message = "please use only uppercase and lowercase letter and number and min 5 and max 8 alphanumeric"
 		} else if fieldError.Tag() == "passwordvalidator" {
-			r.Message = "please use only uppercase, lowercase, number and must have 1 uppercase. lowercase, number, @, _, -, min 8 and max 20"
+			errorMessage.Message = "please use only uppercase, lowercase, number and must have 1 uppercase. lowercase, number, @, _, -, min 8 and max 20"
 		} else if fieldError.Tag() == "telephonevalidator" {
-			r.Message = "please use only number and + "
+			errorMessage.Message = "please use only number and + "
 		} else if fieldError.Tag() == "email" {
-			r.Message = "please input a correct email format "
+			errorMessage.Message = "please input a correct email format "
 		} else if fieldError.Tag() == "gte" {
-			r.Message = "please input greater than equal to " + fieldError.Param()
+			errorMessage.Message = "please input greater than equal to " + fieldError.Param()
 		} else {
-			r.Message = "is " + fieldError.Tag()
+			errorMessage.Message = "is " + fieldError.Tag()
 		}
-		results = append(results, r)
+		errorMessages = append(errorMessages, errorMessage)
 	}
-	return
-}
-
-func ToResultsMessageResponse(requestId string, field string, message string) (response string, err error) {
-	var results []Result
-	var result Result
-	result.Field = field
-	result.Message = message
-	results = append(results, result)
-	var resultsByte []byte
-	resultsByte, err = json.Marshal(results)
-	if err != nil {
-		return
-	}
-	response = string(resultsByte)
 	return
 }

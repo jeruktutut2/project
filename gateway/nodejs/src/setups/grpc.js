@@ -13,9 +13,9 @@ const setClient = async () => {
     const protoPath = import.meta.dirname + "/../protofiles/user.proto"
     var packageDefinition = protoLoader.loadSync(protoPath, options);
     const userProto = grpc.loadPackageDefinition(packageDefinition).protofiles
-    console.log(new Date(), "grcp user client: connecting to 0.0.0.0:"+process.env.PROJECT_USER_APPLICATION_PORT);
-    const client = new userProto.UserService("0.0.0.0:"+process.env.PROJECT_USER_APPLICATION_PORT, grpc.credentials.createInsecure())
-    console.log(new Date(), "grcp user client: connected to 0.0.0.0:"+process.env.PROJECT_USER_APPLICATION_PORT);
+    console.log(new Date(), "grcp user client: connecting to "+process.env.PROJECT_GATEWAY_USER_APPLICATION_HOST);
+    const client = new userProto.UserService(process.env.PROJECT_GATEWAY_USER_APPLICATION_HOST, grpc.credentials.createInsecure())
+    console.log(new Date(), "grcp user client: connected to "+process.env.PROJECT_GATEWAY_USER_APPLICATION_HOST);
     return client
 }
 

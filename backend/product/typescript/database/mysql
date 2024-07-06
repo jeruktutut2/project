@@ -1,0 +1,39 @@
+create database:
+CREATE DATABASE project_products;
+SHOW DATABASES;
+USE project_products;
+SHOW TABLES;
+
+create table products:
+CREATE TABLE products (
+  	id int NOT NULL AUTO_INCREMENT,
+	user_id int NOT NULL,
+	name varchar(255) NOT NULL,
+	description TEXT NOT NULL,
+	stock MEDIUMINT NOT NULL,
+  	PRIMARY KEY (id),
+  	KEY fk_user_permission_user (user_id),
+  	CONSTRAINT user_permission_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO products (id, user_id, name, description, stock) VALUES (1, 1, "name", "description", 1);
+
+DROP TABLE IF EXISTS products;
+
+-- INSERT INTO user (id,username,email,password,utc,created_at) VALUES (1,"username","email@email.com","$2a$10$MvEM5qcQFk39jC/3fYzJzOIy7M/xQiGv/PAkkoarCMgsx/rO0UaPG","utc",1695095017);
+
+-- DROP TABLE IF EXISTS user;
+
+create table user:
+CREATE TABLE user (
+  	id int NOT NULL AUTO_INCREMENT,
+  	username varchar(50) NOT NULL,
+  	email varchar(100) NOT NULL,
+  	PRIMARY KEY (id),
+  	UNIQUE KEY username_unique_index (username),
+  	UNIQUE KEY email_unique_index (email)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO user (id,username,email) VALUES (1,"username","email@email.com");
+
+DROP TABLE IF EXISTS user;

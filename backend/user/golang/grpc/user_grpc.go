@@ -42,7 +42,7 @@ func (userGrpcService *UserGrpcServiceImplementation) Register(ctx context.Conte
 	registerUserRequest.Username = request.Username
 	registerUserRequest.Email = request.Email
 	registerUserRequest.Password = request.Password
-	registerUserRequest.ConfirmPassword = request.Confirmpassword
+	registerUserRequest.Confirmpassword = request.Confirmpassword
 	registerUserRequest.Utc = request.Utc
 	registerUserResponse, err := userGrpcService.UserService.Register(ctx, requestIdA[0], registerUserRequest)
 	if err != nil {

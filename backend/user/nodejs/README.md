@@ -9,3 +9,9 @@ because if i use dockerfile i need to npx generate or (maybe) copy all file to d
 https://github.com/prisma/prisma/discussions/20207  
 npm uninstall prisma @prisma/client  
 delete prisma folder  
+
+## test  
+npx jest path/to/your/test-file.js --runInBand  
+npx jest tests/integration-test/services/user-service.test.js --detectOpenHandles  
+npx jest  
+https://stackoverflow.com/questions/62214949/testing-grpc-functions  

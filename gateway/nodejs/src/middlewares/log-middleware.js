@@ -10,10 +10,12 @@ const setLogRequest = async (req, res, next) => {
     next()
 }
 
-const logResponse = async (res, httpCode, requestId, response) => {
-    const resp = JSON.stringify({responseTime: new Date, app: "project-gateway", requestId: requestId, response: response})
+// const logResponse = async (res, httpCode, requestId, response) => {
+const logResponse = async (requestId, response) => {
+    // console.log("new Date():", new Date(), requestId, response);
+    const resp = JSON.stringify({responseTime: new Date(), app: "project-gateway", requestId: requestId, response: response})
     console.log(resp);
-    return res.status(httpCode).json(response)
+    // return res.status(httpCode).json(response)
 }
 
 export default {

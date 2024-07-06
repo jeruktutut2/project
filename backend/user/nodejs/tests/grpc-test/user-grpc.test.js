@@ -1,0 +1,2 @@
+// why don't create test for user grpc, because there is an error TypeError: Cannot read properties of undefined (reading 'loadSync')
+// i don't know why it happened, eventhough i moved the creating of grpc client in src, the error still appeared

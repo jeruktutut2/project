@@ -11,7 +11,7 @@ signal.forEach((eventType) => {
     process.on(eventType, async () => {
         console.log(new Date(), eventType, "stop process");
         mysqlUtil.closeConnection(mysqlUtil.mysqlPool)
-        await redisUtil.closeConnection()
+        await redisUtil.closeConnection(redisUtil.redis)
         process.exit(0)
     });
 });

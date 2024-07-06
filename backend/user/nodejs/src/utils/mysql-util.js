@@ -8,6 +8,14 @@ const newConnection = () => {
     return pool
 }
 
+const getConnection = async(pool) => {
+    return await pool.getConnection()
+}
+
+const releaseConnection = (pool, connection) => {
+    return pool.releaseConnection(connection)
+}
+
 const closeConnection = (mysqlPool) => {
     console.log(new Date(), "mysql: closing connection from", process.env.PROJECT_USER_MYSQL_HOST);
     mysqlPool.end()
@@ -17,5 +25,7 @@ const closeConnection = (mysqlPool) => {
 export default {
     newConnection,
     mysqlPool,
+    getConnection,
+    releaseConnection,
     closeConnection
 }

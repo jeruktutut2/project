@@ -2,6 +2,7 @@ import grpcSetup from "../setups/grpc.js";
 import grpc from "@grpc/grpc-js";
 import grpcException from "../exception/grpc-exception.js";
 import logMiddleware from "../middlewares/log-middleware.js";
+import controller from "./controller.js";
 
 const register = async (req, res, next) => {
     const metadata = new grpc.Metadata()
@@ -10,7 +11,8 @@ const register = async (req, res, next) => {
         if (error) {
             return grpcException.grpcErrorHandler(error, req, res)
         }
-        return logMiddleware.logResponse(res, 201, req.requestId, response)
+        // return logMiddleware.logResponse(res, 201, req.requestId, {data: response, errors: ""})
+        return controller.setResponse(res, 201, req.requestId, response, "")
     })
 }
 
@@ -23,7 +25,8 @@ const login = async (req, res, next) => {
             return grpcException.grpcErrorHandler(error, req, res)
         }
         res.cookie("Authorization", response.sessionid, { path: "/", signed: true, httpOnly: true })
-        return logMiddleware.logResponse(res, 200, req.requestId, {data: "successfully login", error: ""})
+        // return logMiddleware.logResponse(res, 200, req.requestId, {data: "successfully login", errors: ""})
+        return controller.setResponse(res, 200, req.requestId, "successfully login", "")
     })
 }
 
@@ -34,7 +37,8 @@ const logout = async (req, res, next) => {
             return grpcException.grpcErrorHandler(error, req, res)
         }
         res.cookie("Authorization", "", {path: "/", httpOnly: true, maxAge: -1})
-        return logMiddleware.logResponse(res, 200, req.requestId, {data: "successfully logout", error: ""})
+        // return logMiddleware.logResponse(res, 200, req.requestId, {data: "successfully logout", errors: ""})
+        return controller.setResponse(res, 200, req.requestId, "successfully logout", "")
     })
 }
 

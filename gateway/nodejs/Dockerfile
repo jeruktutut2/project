@@ -17,6 +17,7 @@ WORKDIR /app
 # COPY package*.json ./
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src/protofiles ./dist/protofiles
 
 RUN npm install --only=production
 

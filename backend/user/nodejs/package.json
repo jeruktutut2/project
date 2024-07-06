@@ -4,13 +4,14 @@
   "description": "user",
   "main": "main.js",
   "scripts": {
-    "test": "jest -i",
+    "test": "jest",
     "build": "babel src --out-dir dist"
   },
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+    },
+    "testEnvironment": "node"
   },
   "author": "",
   "license": "ISC",

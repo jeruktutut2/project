@@ -28,3 +28,6 @@ docker build -t project-backend-user:1.0.0 .
 docker run --name project-user-container --network project -p 10001:10001 project-user:1.0.0
 docker run --name project-user-container -p 10001:10001 project-user:1.0.0  
 if you want to use bridge network (default), you no need to put --network project  
+
+## test grpc golang
+https://github.com/grpc/grpc-go/issues/1786  

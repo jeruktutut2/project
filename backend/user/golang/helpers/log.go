@@ -1,4 +1,4 @@
-package helper
+package helpers
 
 import (
 	"runtime/debug"
@@ -9,6 +9,6 @@ import (
 func PrintLogToTerminal(err error, requestId string) {
 	stacktrace := string(debug.Stack())
 	stacktrace = strings.ReplaceAll(stacktrace, "\n", "")
-	log := `{"logTime": "` + time.Now().String() + `", "app": "project-user", "requestId": "` + requestId + `", "stacktrace": "` + stacktrace + `", "error": "` + err.Error() + `"}`
+	log := `{"grpcLogTime": "` + time.Now().String() + `", "app": "project-user", "requestId": "` + requestId + `", "stacktrace": "` + stacktrace + `", "error": "` + err.Error() + `"}`
 	println(log)
 }

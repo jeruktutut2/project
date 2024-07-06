@@ -25,6 +25,11 @@ spec:
               cpu: 200m
               memory: 200Mi
           env:
+            - name: PROJECT_GATEWAY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: project-secret
+                  key: projectGatewayCookieSecret
             - name: PROJECT_GATEWAY_APPLICATION_PORT
               valueFrom:
                 configMapKeyRef:

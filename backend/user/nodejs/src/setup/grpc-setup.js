@@ -3,7 +3,7 @@ import protoLoader from "@grpc/proto-loader";
 import logInterceptor from "../interceptors/log.js";
 import { Register, Login, Logout } from "../grpc/user-grpc.js";
 
-const listen = () => {
+const listen = async () => {
     const options = {
         keepCase: true,
         longs: String,
